@@ -3,10 +3,11 @@ plugins {
     id 'org.springframework.boot' version '2.7.6'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'pl.allegro.tech.build.axion-release' version '1.13.6'
+    id 'com.palantir.docker' version '0.31.0'
+    id 'com.palantir.docker-run' version '0.31.0'
 }
 
-group = 'ua.okidoki'
-version = '0.0.1-SNAPSHOT'
+version = scmVersion.version
 
 repositories {
     mavenCentral()
@@ -25,4 +26,25 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+String imageName = "docker.io/panasiuknazar/spring-aws:$version"
+
+docker {
+    name imageName
+    files "build/libs/${bootJar.archiveFileName.get()}"
+    buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
+}
+
+dockerRun {
+    name project.name
+    image imageName
+    ports '8080:8080'
+    clean true
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
