@@ -30,7 +30,7 @@ tasks.named('test') {
 }
 
 String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'panasiuknazar'
-String imageName = "${dockerHubUsernameProperty}/spring-aws:$version"
+String imageName = "${dockerHubUsernameProperty}/spring-with-jenkins-pipelines:$version"
 
 docker {
     name imageName
